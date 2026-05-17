@@ -25,6 +25,13 @@ export default function Signup({ isDarkMode }) {
     const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
     const [timeLeft, setTimeLeft] = useState(60);
 
+    // Dynamic routing fallback function to return the user back to where they left off
+    const navigateToDestination = () => {
+        const targetDestination = localStorage.getItem("authRedirectTarget") || "/";
+        localStorage.removeItem("authRedirectTarget"); // Clean up session token memory instantly
+        navigate(targetDestination);
+    };
+
     useEffect(() => {
         if (step === 2 && timeLeft > 0) {
             const timerId = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
@@ -36,7 +43,6 @@ export default function Signup({ isDarkMode }) {
     useEffect(() => {
         if (window.google && step === 1) {
             window.google.accounts.id.initialize({
-                // Using standard development client sandbox token config
                 client_id: "619019951845-osf8jdlenfhib79akb5hp4mahiuue3uk.apps.googleusercontent.com",
                 ux_mode: "popup",
                 callback: (response) => {
@@ -50,12 +56,15 @@ export default function Signup({ isDarkMode }) {
                         const googleUser = jsonPayload ? JSON.parse(jsonPayload) : {};
                         localStorage.setItem("isAuthenticated", "true");
                         localStorage.setItem("userFullName", googleUser.name || "Palak Rohra");
-                        navigate("/");
+                        
+                        // Execute adaptive route matching redirection
+                        navigateToDestination();
                     } catch (e) {
-                        // Safe developmental fallback name decoder matching profile setup
                         localStorage.setItem("isAuthenticated", "true");
                         localStorage.setItem("userFullName", "Palak Rohra");
-                        navigate("/");
+                        
+                        // Execute adaptive route matching redirection on fallback
+                        navigateToDestination();
                     }
                 }
             });
@@ -124,7 +133,8 @@ export default function Signup({ isDarkMode }) {
             localStorage.setItem("isAuthenticated", "true");
             localStorage.setItem("userFullName", cleanSavedName);
             
-            navigate("/");
+            // Execute adaptive route matching redirection on live OTP validation success
+            navigateToDestination();
         } catch (err) {
             if (err.response && err.response.data) {
                 setError(err.response.data.detail || "Server rejected your OTP code entry.");
@@ -164,7 +174,6 @@ export default function Signup({ isDarkMode }) {
     const inputStyle = { width: "100%", padding: "16px", borderRadius: "12px", border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#cbd5e1"}`, marginBottom: "20px", backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.2)" : "#ffffff", color: isDarkMode ? "white" : "#0f172a", outline: "none", fontSize: "1rem" };
     const labelStyle = { display: "block", fontSize: "12px", fontWeight: "800", color: isDarkMode ? "#94a3b8" : "#64748b", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "1px" };
     const btnStyle = { width: "100%", padding: "18px", backgroundColor: "#3b82f6", color: "white", borderRadius: "50px", border: "none", fontWeight: "900", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px", boxShadow: "0 10px 20px rgba(59, 130, 246, 0.2)" };
-    const socialBtnStyle = { flex: 1, padding: "14px", borderRadius: "12px", border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0"}`, background: isDarkMode ? "rgba(255,255,255,0.05)" : "white", cursor: "pointer", color: isDarkMode ? "white" : "#0f172a", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px", fontWeight: "bold", transition: "all 0.3s ease" };
 
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh", paddingTop: "20px" }}>
@@ -246,7 +255,6 @@ export default function Signup({ isDarkMode }) {
                                 </div>
 
                                 <div style={{ display: "flex", flexDirection: "column", gap: "15px", alignItems: "center" }}>
-                                    {/* NATIVE POPUP CHOSER IFRAME CONTAINER LAYER */}
                                     <div id="google-signup-target" style={{ minHeight: "45px" }}></div>
                                     
                                     <span onClick={() => { setAuthMethod(authMethod === "email" ? "phone" : "email"); setError(""); }} style={{ fontSize: "13px", fontWeight: "bold", color: "#3b82f6", cursor: "pointer" }}>

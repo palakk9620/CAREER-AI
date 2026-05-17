@@ -14,6 +14,13 @@ export default function Auth({ isDarkMode }) {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  // Centralized adaptive redirection engine
+  const navigateToDestination = () => {
+    const targetDestination = localStorage.getItem("authRedirectTarget") || location.state?.from || "/";
+    localStorage.removeItem("authRedirectTarget"); // Clean up session memory instantly
+    navigate(targetDestination);
+  };
+
   useEffect(() => {
       if (window.google && authMethod === "email") {
           window.google.accounts.id.initialize({
@@ -22,7 +29,9 @@ export default function Auth({ isDarkMode }) {
               callback: (response) => {
                   localStorage.setItem("isAuthenticated", "true");
                   localStorage.setItem("userFullName", "Palak Rohra");
-                  navigate("/");
+                  
+                  // Execute adaptive redirect check for Google Auth
+                  navigateToDestination();
               }
           });
 
@@ -67,8 +76,8 @@ export default function Auth({ isDarkMode }) {
       }
     }
 
-    const returnUrl = location.state?.from || "/";
-    navigate(returnUrl, { state: location.state });
+    // Execute adaptive redirect check for standard Form layouts
+    navigateToDestination();
   };
 
   const inputStyle = { width: "100%", padding: "16px", borderRadius: "12px", border: `1px solid ${isDarkMode ? "rgba(255,255,255,0.1)" : "#cbd5e1"}`, marginBottom: "20px", backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.2)" : "#ffffff", color: isDarkMode ? "white" : "#0f172a", outline: "none", fontSize: "1rem" };
