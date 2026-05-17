@@ -38,7 +38,7 @@ app = FastAPI(title="AI Career Navigator API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173", 
+        "https://career-ai-8rhm.onrender.com", 
         "http://127.0.0.1:5173",
         "https://career-frontend.vercel.app"
     ],
