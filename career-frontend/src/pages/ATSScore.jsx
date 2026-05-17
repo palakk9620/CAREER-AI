@@ -43,7 +43,7 @@ export default function ATSScore({ isDarkMode }) {
             // 3. Execute cross-matching logic over native JSON layout schemas
             const matchResponse = await axios.post("https://career-ai-8rhm.onrender.com/match-jd", {
                 user_id: cleanUserId,
-                job_description: formattedJdF
+                job_description: formattedJd
             });
 
             // Trace error catches gracefully
