@@ -34,6 +34,7 @@ db = mongo_client.career_navigator
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 app = FastAPI(title="AI Career Navigator API")
+app.router.redirect_slashes = False
 
 app.add_middleware(
     CORSMiddleware,
@@ -207,11 +208,13 @@ async def verify_otp(req: OTPVerify):
 # 4. MULTIPART RESUME UPLOAD 
 # ==========================================
 @app.post("/upload-resume")
+@app.post("/upload-resume/")
 async def upload_resume(
     user_id: str = Form(...),
     file: UploadFile = File(...),
     target_role: str = Form(...)
 ):
+    
     content = await file.read()
     resume_text = ""
     with pdfplumber.open(io.BytesIO(content)) as pdf:
@@ -231,6 +234,7 @@ async def upload_resume(
 # 5. DYNAMIC ATS MATCH ENDPOINT (FIXED)
 # ==========================================
 @app.post("/match-jd")
+@app.post("/match-jd/")
 async def match_jd(req: MatchJDRequest):
     print(f"🔍 Analyzing ATS Match for User ID: {req.user_id}")
     user = await db.users.find_one({"user_id": req.user_id})
