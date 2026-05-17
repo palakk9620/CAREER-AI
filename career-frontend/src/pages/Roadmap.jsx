@@ -32,7 +32,7 @@ export default function Roadmap({ isDarkMode }) {
         const cleanUserId = cachedName.trim().replace(/\s+/g, '_');
 
         try {
-            const response = await axios.post("http://localhost:8000/api/roadmap", {
+            const response = await axios.post("https://career-ai-8rhm.onrender.com/api/roadmap", {
                 user_id: cleanUserId,
                 role: targetRole,
                 duration: duration
@@ -71,7 +71,7 @@ export default function Roadmap({ isDarkMode }) {
             const dataPayload = new FormData();
             dataPayload.append("user_id", cleanUserId);
 
-            const response = await axios.post("http://localhost:8000/export-roadmap-pdf/", dataPayload, {
+            const response = await axios.post("https://career-ai-8rhm.onrender.com/export-roadmap-pdf/", dataPayload, {
                 responseType: "blob" // Crucial for parsing incoming raw binary data streams!
             });
 

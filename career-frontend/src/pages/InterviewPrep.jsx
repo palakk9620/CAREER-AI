@@ -36,7 +36,7 @@ export default function InterviewPrep({ isDarkMode }) {
     const cleanUserId = cachedName.trim().replace(/\s+/g, '_');
 
     try {
-      const response = await axios.post("http://localhost:8000/api/interview", {
+      const response = await axios.post("https://career-ai-8rhm.onrender.com/api/interview", {
         user_id: cleanUserId,
         role: role,
         experience: experience,
@@ -70,7 +70,7 @@ export default function InterviewPrep({ isDarkMode }) {
       dataPayload.append("user_id", cleanUserId);
       dataPayload.append("section", activeSection);
 
-      const response = await axios.post("http://localhost:8000/export-interview-pdf/", dataPayload, {
+      const response = await axios.post("https://career-ai-8rhm.onrender.com/export-interview-pdf/", dataPayload, {
         responseType: "blob"
       });
 

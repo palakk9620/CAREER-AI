@@ -43,12 +43,12 @@ export default function JobReadiness({ isDarkMode }) {
 
     try {
       // 1. Sync file context directly onto our centralized MongoDB server instance
-      await axios.post("http://localhost:8000/upload-resume", dataPayload, {
+      await axios.post("https://career-ai-8rhm.onrender.com/upload-resume", dataPayload, {
         headers: { "Content-Type": "multipart/form-data" }
       });
 
       // 2. Dispatch cross-examination verification matching trigger natively via JSON
-      const matchResponse = await axios.post("http://localhost:8000/match-jd", {
+      const matchResponse = await axios.post("https://career-ai-8rhm.onrender.com/match-jd", {
         user_id: cleanUserId,
         job_description: jobDescription
       });

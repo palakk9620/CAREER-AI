@@ -88,7 +88,7 @@ export default function Signup({ isDarkMode }) {
         setLoading(true);
         try {
             const contactTarget = authMethod === "email" ? email : phone;
-            await axios.post("http://localhost:8000/api/request-otp", {
+            await axios.post("https://career-ai-8rhm.onrender.com/api/request-otp", {
                 contact: contactTarget,
                 method: authMethod
             });
@@ -115,7 +115,7 @@ export default function Signup({ isDarkMode }) {
         setLoading(true);
         try {
             const contactTarget = authMethod === "email" ? email : phone;
-            await axios.post("http://localhost:8000/api/verify-otp", {
+            await axios.post("https://career-ai-8rhm.onrender.com/api/verify-otp", {
                 contact: contactTarget,
                 otp: finalOtp
             });
