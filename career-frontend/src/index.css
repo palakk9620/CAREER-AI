@@ -129,3 +129,14 @@ body {
   letter-spacing: -2px;
   line-height: 1;
 }
+
+/* Force all form input labels inside dark containers to be highly visible */
+.mediova-card label,
+.card-container label,
+form label,
+div[class*="bg-[#111c3a]"] label,
+div[class*="bg-"] label {
+    color: #94a3b8 !important; /* Premium light slate gray for high contrast */
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+}
