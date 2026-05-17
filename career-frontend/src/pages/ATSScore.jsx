@@ -13,7 +13,7 @@ export default function ATSScore({ isDarkMode }) {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
-    
+
     useEffect(() => {
         sessionStorage.setItem("ats_formData", JSON.stringify(formData));
     }, [formData]);
@@ -21,7 +21,7 @@ export default function ATSScore({ isDarkMode }) {
     const handleAnalyze = async (e) => {
         e.preventDefault();
         if (!file) return alert("Please upload your resume.");
-        
+
         setLoading(true);
 
         // 1. DEFINE VARIABLES FIRST SO THEY ARE IN SCOPE FOR EVERYTHING BELOW
@@ -36,14 +36,14 @@ export default function ATSScore({ isDarkMode }) {
 
         try {
             // 2. Fire off file binary to storage route location
-            await axios.post("http://localhost:8000/upload-resume", dataPayload, {
+            await axios.post("https://career-ai-8rhm.onrender.com/upload-resume", dataPayload, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 
             // 3. Execute cross-matching logic over native JSON layout schemas
-            const matchResponse = await axios.post("http://localhost:8000/match-jd", {
+            const matchResponse = await axios.post("https://career-ai-8rhm.onrender.com/match-jd", {
                 user_id: cleanUserId,
-                job_description: formattedJd
+                job_description: formattedJdF
             });
 
             // Trace error catches gracefully
@@ -55,9 +55,9 @@ export default function ATSScore({ isDarkMode }) {
 
             // 4. Map values into local view variables perfectly matching rendering keys
             setResult({
-                score: matchResponse.data.match_score ?? 70, 
-                strengths: matchResponse.data.tips || ["Resume parsed correctly."], 
-                improvements: matchResponse.data.missing_keywords || ["No major discrepancies found!"] 
+                score: matchResponse.data.match_score ?? 70,
+                strengths: matchResponse.data.tips || ["Resume parsed correctly."],
+                improvements: matchResponse.data.missing_keywords || ["No major discrepancies found!"]
             });
 
         } catch (err) {
@@ -96,10 +96,10 @@ export default function ATSScore({ isDarkMode }) {
                             </select>
                         </div>
                         <div style={{ gridColumn: "span 1" }}><label style={labelStyle}>Resume Upload (PDF)</label><input type="file" accept=".pdf" required style={{ ...inputStyle, padding: "12px" }} onChange={e => setFile(e.target.files[0])} /></div>
-                        
-                        <motion.button 
-                            type="submit" 
-                            disabled={loading} 
+
+                        <motion.button
+                            type="submit"
+                            disabled={loading}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             style={{ gridColumn: "span 2", padding: "18px", backgroundColor: "var(--primary-accent)", color: "white", borderRadius: "50px", border: "none", fontWeight: "900", cursor: loading ? "not-allowed" : "pointer", display: "flex", justifyContent: "center", alignItems: "center", gap: "10px", marginTop: "10px" }}
